@@ -246,6 +246,17 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // place to return solution
   CppAD::ipopt::solve_result<Dvector> solution;
 
+
+  cout << "options: " << options << endl;;
+  cout << "Vars Size: " << vars.size() << endl;
+  cout << "Vars: " << vars << endl;
+  cout << "Vars Lower Bound Size: " << vars_lowerbound.size() <<":"<<vars_lowerbound << endl;
+  cout << "Vars Upper Bound Size: " << vars_upperbound.size() << ":" << vars_upperbound << endl;
+  cout << "Constraint Lower Bound Size: " << constraints_lowerbound.size()<<":"<< constraints_lowerbound << endl;
+  cout << "Constraint Upper Bound Size: " << constraints_upperbound.size() << ":" << constraints_upperbound << endl;
+
+
+
   // solve the problem
   CppAD::ipopt::solve<Dvector, FG_eval>(
       options, vars, vars_lowerbound, vars_upperbound, constraints_lowerbound,
@@ -265,14 +276,21 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // creates a 2 element double vector.
   vector<double> ret;
 
+  cout << "Line 279" << endl;
+  cout << "Soultion : " << solution.x << endl;
+
   ret.push_back(solution.x[delta_start]);
   ret.push_back(solution.x[a_start]);
+
+
+
 
   for (unsigned int i = 0; i < N-1; i++) {
 	  ret.push_back(solution.x[x_start + i+1]);
 	  ret.push_back(solution.x[y_start + i+1]);
   }
 
+  cout << "Line 293" << endl;
 
   return ret;
 }
